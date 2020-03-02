@@ -7,6 +7,14 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <ListBox x:Name="lbxStock" SelectionChanged="LbxStock_SelectionChanged" Grid.Row="1" Margin="10"/>
+        <ListBox x:Name="lbxSuppliers" DisplayMemberPath="SupplierName" SelectedValuePath="SupplierID" SelectionChanged="LbxSuppliers_SelectionChanged" Grid.Row="1" Margin="10"/>
+        <ListBox x:Name="lbxCountries" SelectionChanged="LbxCountries_SelectionChanged" Grid.Row="1" Margin="10"/>
     </Grid>
 </Window>

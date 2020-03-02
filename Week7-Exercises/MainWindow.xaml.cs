@@ -24,5 +24,20 @@ namespace Week7_Exercises
         {
             InitializeComponent();
         }
+
+        private void LbxStock_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void LbxSuppliers_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void LbxCountries_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
