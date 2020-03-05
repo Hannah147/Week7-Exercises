@@ -20,24 +20,84 @@ namespace Week7_Exercises
     /// </summary>
     public partial class MainWindow : Window
     {
+        NORTHWNDEntities db = new NORTHWNDEntities();
         public MainWindow()
         {
             InitializeComponent();
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            //Populate stock level listbox
+            lbxStock.ItemsSource = Enum.GetNames(typeof(StockLevel));
+
+            // Populate the suppliers listbox using anonymous type
+            var query1 = from s in db.Suppliers
+                         orderby s.CompanyName
+                         select new
+                         {
+                             SupplierName = s.CompanyName,
+                             SupplierID = s.SupplierID,
+                             Country = s.Country
+                         };
+
+            lbxSuppliers.ItemsSource = query1.ToList();
+
+            // Easier to base this on query 1 which has the information
+            var query2 = query1
+                .OrderBy(s => s.Country)
+                .Select(s => s.Country);
+
+            var countries = query2.ToList();
+
+            lbxCountries.ItemsSource = countries.Distinct();
+        }
+
         private void LbxStock_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            var query = from p in db.Products
+                        where p.UnitsInStock < 50
+                        orderby p.ProductName
+                        select p.ProductName;
 
+            string selected = lbxStock.SelectedItem as string;
+
+            switch(selected)
+            {
+                case "Low":
+                    //do nothing as query sorted from above
+                    break;
+                case "Normal":
+                    query = from p in db.Products
+                            where p.UnitsInStock >= 50 && p.UnitsInStock <= 100
+                            orderby p.ProductName
+                            select p.ProductName;
+                    break;
+
+                case "Overstocked":
+                    query = from p in db.Products
+                            where p.UnitsInStock > 100
+                            orderby p.ProductName
+                            select p.ProductName;
+                    break;
+            }
+
+            lbxProducts.ItemsSource = query.ToList();
         }
 
         private void LbxSuppliers_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            int supplierID = Convert.ToInt32(lbxSuppliers.SelectedValue);
 
+            var query = from p in db.Products
+                        where p.SupplierID == supplierID
         }
 
         private void LbxCountries_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }
+
+        public enum StockLevel { Low, Normal, Overstocked};
     }
 }
